@@ -1,3 +1,3 @@
 def check_todo(text)
-  return false
+  return text == "#TODO"
 end
