@@ -22,17 +22,17 @@ has_good_grammar: a boolean (e.g. true)
 ## 3. Create Examples as Tests
 
 ```ruby
-extract_uppercase("") => true
-extract_uppercase("Hello world") => false
-extract_uppercase("Hello world.") => true
-extract_uppercase("Hello world!") => true
-extract_uppercase("Hello world?") => true
-extract_uppercase("Hello world;") => false
-extract_uppercase("Hello world+") => false
-extract_uppercase("hello world.") => false
-extract_uppercase("hello world!") => false
-extract_uppercase("hello world?") => false
-extract_uppercase("This sentence has good grammar. The second sentence doesn't end with punctation") => false
-extract_uppercase("This sentence has good grammar. the second sentence doesn't start with a capital!") => false
-extract_uppercase(nil) throws an error
+check_grammar("") => true
+check_grammar("Hello world") => false
+check_grammar("Hello world.") => true
+check_grammar("Hello world!") => true
+check_grammar("Hello world?") => true
+check_grammar("Hello world;") => false
+check_grammar("Hello world+") => false
+check_grammar("hello world.") => false
+check_grammar("hello world!") => false
+check_grammar("hello world?") => false
+check_grammar("This sentence has good grammar. The second sentence doesn't end with punctation") => false
+check_grammar("This sentence has good grammar. the second sentence doesn't start with a capital!") => true
+check_grammar(nil) throws an error
 ```
