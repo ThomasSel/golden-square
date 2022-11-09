@@ -1,4 +1,5 @@
 def check_grammar(text)
+  fail "ERROR - Input cannot be nil" if text.nil?
   return true if text == ""
 
   is_capitalized = text.chars.first == text.chars.first.upcase

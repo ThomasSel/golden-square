@@ -48,4 +48,8 @@ RSpec.describe "check_grammar method" do
       expect(result).to eq true
     end
   end
+
+  it "raises error when input nil" do
+    expect { check_grammar(nil) }.to raise_error "ERROR - Input cannot be nil"
+  end
 end
