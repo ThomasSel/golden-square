@@ -1,0 +1,6 @@
+[submodule "testing-bites/03_testing_for_errors_bite"]
+	path = testing-bites/03_testing_for_errors_bite
+	url = https://github.com/ChrisHutchinson1982/03_testing_for_errors_bite.git
+[submodule "testing-bites/02_testing_classes_with_equality_bite"]
+	path = testing-bites/02_testing_classes_with_equality_bite
+	url = https://github.com/ChrisHutchinson1982/02_testing_classes_with_equality_bite.git
