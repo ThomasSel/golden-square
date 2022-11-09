@@ -25,10 +25,10 @@ estimated_time: an array (e.g. [0, 1])
 ## 3. Create Examples as Tests
 
 ```ruby
+reading_time("") => [0, 0]
 reading_time("Hello, World!") => [0, 1]
 reading_time("This text contains 12 words and should take 4 seconds to read") => [0, 4]
-reading_time(random_input) => [1, 0] # Where random_input is a string with 200 random words
-reading_time("Lorem Ipsum [...]") => [2, 6] # We assume this text is 438 words long (we could use random words)
-reading_time("") => [0, 0]
+reading_time(random_input) => [1, 0] # Where random_input is a string with 200 words
+reading_time(random_input) => [2, 12] # Where random_input is a string with 200 words
 reading_time(nil) throws an error
 ```
