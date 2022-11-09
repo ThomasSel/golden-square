@@ -1,3 +1,3 @@
 def check_todo(text)
-  return text == "#TODO"
+  return text.match?(/#TODO/)
 end
