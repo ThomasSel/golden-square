@@ -29,5 +29,5 @@ check_todo("#ToDo Do the dishes") => false
 check_todo("Do the dishes #TODO") => true
 check_todo("Do the dishes #todo") => false
 check_todo("Do the #TODO dishes") => true
-check_todo("Do the dis#TODOhes") => false
+check_todo("Do the dis#TODOhes") => true
 ```
