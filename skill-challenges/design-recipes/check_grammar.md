@@ -21,13 +21,14 @@ has_good_grammar: a boolean (e.g. true)
 
 ## 3. Create Examples as Tests
 
-_Make a list of examples of what the method will take and return._
-
 ```ruby
 extract_uppercase("") => true
+extract_uppercase("Hello world") => false
 extract_uppercase("Hello world.") => true
 extract_uppercase("Hello world!") => true
 extract_uppercase("Hello world?") => true
+extract_uppercase("Hello world;") => false
+extract_uppercase("Hello world+") => false
 extract_uppercase("hello world.") => false
 extract_uppercase("hello world!") => false
 extract_uppercase("hello world?") => false
