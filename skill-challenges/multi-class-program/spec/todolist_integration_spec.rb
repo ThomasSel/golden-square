@@ -43,4 +43,29 @@ describe 'todo list integration' do
             expect(todo_list.complete).to eq [todo_2]
         end
     end
+
+    context "#give_up!" do
+        it "marks all todos as complete" do
+            todo_list = TodoList.new
+            todo_1 = Todo.new("my todo")
+            todo_2 = Todo.new("my todo")
+            todo_list.add(todo_1)
+            todo_list.add(todo_2)
+            todo_list.give_up!
+            expect(todo_list.incomplete).to eq []
+            expect(todo_list.complete).to eq [todo_1, todo_2]
+        end
+
+        it "marks all todos as complete even if they're already done" do
+            todo_list = TodoList.new
+            todo_1 = Todo.new("my todo")
+            todo_2 = Todo.new("my todo")
+            todo_list.add(todo_1)
+            todo_list.add(todo_2)
+            todo_1.mark_done!
+            todo_list.give_up!
+            expect(todo_list.incomplete).to eq []
+            expect(todo_list.complete).to eq [todo_1, todo_2]
+        end
+    end
 end
