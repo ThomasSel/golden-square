@@ -159,24 +159,31 @@ diary.list_entries # => [entry_1, entry_2]
 diary = Diary.new
 task_1 = Task.new("groceries")
 task_2 = Task.new("do the dishes")
-diary.add_todo(task_1)
-diary.add_todo(task_2)
+diary.add_task(task_1)
+diary.add_task(task_2)
 diary.list_tasks # => [task_1, task_2]
 
 diary = Diary.new
 task_1 = Task.new("groceries")
 task_2 = Task.new("do the dishes")
-diary.add_todo(task_1)
-diary.add_todo(task_2)
+diary.add_task(task_1)
+diary.add_task(task_2)
 task_1.mark_complete!
 diary.completed_tasks # => [task_1]
+diary.list_tasks # => [task_2]
 
 diary = Diary.new
 entry_1 = DiaryEntry.new("This is a phone number: 07414927478")
 entry_2 = DiaryEntry.new("Two phone numbers: 09876543210 12345678901")
 diary.add_entry(entry_1)
 diary.add_entry(entry_2)
-diray.list_contacts # => ["07414927478", "09876543210", "12345678901"]
+diary.list_contacts # => ["07414927478", "09876543210", "12345678901"]
+
+diary = Diary.new
+entry_1 = DiaryEntry.new("This is a phone number: 07414927478")
+diary.add_entry(entry_1)
+diary.add_entry(entry_1)
+diary.list_contacts # => ["07414927478"]
 
 diary = Diary.new
 entry_1 = DiaryEntry.new("Short entry")
