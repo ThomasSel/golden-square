@@ -32,36 +32,37 @@ uses asciiflow.com but you could also use excalidraw.com, draw.io, or miro.com_
 ```
 ┌─────────────────────┐
 │                     │
-│    Diary:           │
+│  Diary              │
 │                     │
-│ - add               │
+│ - add_entry         │
 │                     │
-│ - all               │
+│ - add_task          │
 │                     │
-│ - readable_entries  │-------------
-│                     │             |
-└─────────┬───────────┘             |
-          │                         |
-          │                         |
-          |                ┌────────▼─────────┐
-          |                │                  │
-          |                │    Contacts:     │
-          |                │                  │
-          |                │ - list           │
-          |                │                  │
-          |                │ - get_numbers    │
-          |                │                  │
-          |                └──────────────────┘
-          |
-  ┌───────▼─────────┐
-  │                 │
-  │     TodoList:   │
-  │                 │
-  │ - tasks         │
-  │                 │
-  │ - add           │
-  │                 │
-  └─────────────────┘
+│ - list_entries      │
+│                     │
+│ - list_tasks        │
+│                     │
+│ - readable_entries  │
+│                     │
+│ - list_contacts     │
+│                     │
+│ - completed_tasks   │
+│                     ├─────────────────┐
+└─────────┬───────────┘                 │
+          │                             │
+          │                             │
+          ▼                             ▼
+┌─────────────────────┐     ┌───────────────────────┐
+│                     │     │                       │
+│  DiaryEntry:        │     │  Task:                │
+│                     │     │                       │
+│ - count_words       │     │ - contents            │
+│                     │     │                       │
+│ - reading_time      │     │ - mark_complete!      │
+│                     │     │                       │
+│ - contents          │     │ - complete?           │
+│ - extract_numbers   │     │                       │
+└─────────────────────┘     └───────────────────────┘
 ```
 
 _Also design the interface of each class in more detail._
@@ -71,51 +72,73 @@ class Diary
   def initialize
   end
 
-  def add_entry(entry) # entry is a string
+  def add_entry(entry) # entry is a DiaryEntry instance
+    # adds entry to diary AND exctracts phone numbers within the entry
     # returns nothing
   end
 
-  def add_todo(task) # todo is a string
-  # returns nothing
+  def add_task(task) # todo is a Task instance
+    # returns nothing
   end
 
-  def show_todo
-  # returns array of tasks
+  def list_entries
+    # returns array of entries
+  end
+  
+  def list_tasks
+    # returns array of pending tasks
   end
 
-  def all
-    # returns a list of all the entries
+  def list_contacts
+    # returns array of phone numbers
   end
 
   def readable_entries(wpm, reading_time) # wpm and reading_time are integers
     # returns entries that I can read in the time given
   end
 
+  def completed_tasks
+    # returns a list of completed tasks
+  end
+
 end
 
-class Contacts
-  def initialize
+class DiaryEntry
+  def initialize(contents) # contents is a string
   end
 
-  def list
-    # returns a list of phone numbers
+  def contents
+    # returns the contents of the entry
   end
 
-  def get_numbers(diary) # diary is an instance of the diary class
-    # returns nothing
+  def count_words
+    # returns an integer: number of words in the entry
+  end
+
+  def reading_time(wpm) # wpm is an integer
+    # returns and integer reperesenting the number of minutes
+    # to read the entry at a given wpm and time
+  end
+
+  def extract_numbers
+    # return a list of phone numbers in the contents
   end
 end
 
-class TodoList
-  def initialize
+class Task
+  def initialize(contents) # contents is a string
   end
 
-  def tasks
-    # returns a list of tasks
+  def contents
+    # returns the contents
   end
 
-  def add(task) # task is a string
+  def mark_complete!
     # returns nothing
+  end
+
+  def complete?
+    # return true if complete, false otherwise
   end
 end
 ```
@@ -127,18 +150,42 @@ combinations that reflect the ways in which the system will be used._
 
 ```ruby
 diary = Diary.new
-diary.add_entry("This is a phone number: 07414927478")
-diary.add_entry("Two phone numbers: 09876543210 12345678901")
-contacts = Contacts.new
-contacts.get_numbers(diary)
-contacts.list
-expect => ["07414927478", "09876543210", "12345678901"]
+entry_1 = DiaryEntry.new("This is a phone number: 07414927478")
+entry_2 = DiaryEntry.new("Two phone numbers: 09876543210 12345678901")
+diary.add_entry(entry_1)
+diary.add_entry(entry_2)
+diary.list_entries # => [entry_1, entry_2]
 
 diary = Diary.new
-diary.add_todo("groceries")
-diary.add_todo("do dishes")
-diary.show_todo
-expect => ["groceries", "do dishes"]
+task_1 = Task.new("groceries")
+task_2 = Task.new("do the dishes")
+diary.add_todo(task_1)
+diary.add_todo(task_2)
+diary.list_tasks # => [task_1, task_2]
+
+diary = Diary.new
+task_1 = Task.new("groceries")
+task_2 = Task.new("do the dishes")
+diary.add_todo(task_1)
+diary.add_todo(task_2)
+task_1.mark_complete!
+diary.completed_tasks # => [task_1]
+
+diary = Diary.new
+entry_1 = DiaryEntry.new("This is a phone number: 07414927478")
+entry_2 = DiaryEntry.new("Two phone numbers: 09876543210 12345678901")
+diary.add_entry(entry_1)
+diary.add_entry(entry_2)
+diray.list_contacts # => ["07414927478", "09876543210", "12345678901"]
+
+diary = Diary.new
+entry_1 = DiaryEntry.new("Short entry")
+entry_2 = DiaryEntry.new("This is a longer entry")
+entry_3 = DiaryEntry.new("one " * 100)
+diary.add_entry(entry_1)
+diary.add_entry(entry_2)
+diary.add_entry(entry_3)
+diary.readable_entries(10, 1) # => [entry_2, entry_1]
 
 ```
 
@@ -148,37 +195,53 @@ _Create examples, where appropriate, of the behaviour of each relevant class at
 a more granular level of detail._
 
 ```ruby
-contacts = Comtacts.new
-contacts.list
-expect => []
+# DiaryEntry
+entry = DiaryEntry.new("Some contents")
+entry.contents # => "Some contents"
 
-todo_list = TodoList.new
-todo_list.tasks
-expect => []
+entry = DiaryEntry.new("Some contents")
+entry.count_words # => 2
 
-todo_list = TodoList.new
-todo_list.add("groceries")
-todo_list.add("do dishes")
-todo_list.tasks
-expect => ["groceries", "do dishes"]
+entry = DiaryEntry.new("Two phone numbers: 09876543210 12345678901")
+entry.reading_time(2) # => 3
+
+entry = DiaryEntry.new("Two phone numbers: 09876543210 12345678901")
+entry.reading_time(0) # throws an error "reading time cannot be 0 or less"
+
+entry = DiaryEntry.new("No phone numbers in this entry")
+entry.extract_numbers # => []
+
+entry = DiaryEntry.new("Two phone numbers: 09876543210 12345678901")
+entry.extract_numbers # => ["09876543210", "12345678901"]
+
+
+# Task
+task = Task.new("do the dishes")
+task.contents # => "do the dishes"
+
+task = Task.new("do the dishes")
+task.complete? # => false
+
+task = Task.new("do the dishes")
+task.mark_complete!
+task.complete? # => true
+
+
+# Diary
+diary = Diary.new
+diary.list_entries # => []
 
 diary = Diary.new
-diary.all
-expect => []
+diary.list_tasks # => []
 
 diary = Diary.new
-diary.add_entry("entry_1")
-diary.add_entry("entry_2")
-diary.all
-expect => ["entry_1", "entry_2"]
+diary.readable_entries # => []
 
 diary = Diary.new
-diary.add_entry("short entry")
-diary.add_entry("This is a longer entry")
-diary.add_entry("one " * 100)
-diary.readable_entries(10, 1)
-expect => ["This is a longer entry", "short entry"]
+diary.list_contacts # => []
 
+diary = Diary.new
+diary.completed_tasks # => []
 ```
 
 _Encode each example as a test. You can add to the above list as you go._
@@ -188,13 +251,3 @@ _Encode each example as a test. You can add to the above list as you go._
 _After each test you write, follow the test-driving process of red, green,
 refactor to implement the behaviour._
 
-
-<!-- BEGIN GENERATED SECTION DO NOT EDIT -->
-
----
-
-**How was this resource?**  
-[😫](https://airtable.com/shrUJ3t7KLMqVRFKR?prefill_Repository=makersacademy%2Fgolden-square&prefill_File=resources%2Fmulti_class_recipe_template.md&prefill_Sentiment=😫) [😕](https://airtable.com/shrUJ3t7KLMqVRFKR?prefill_Repository=makersacademy%2Fgolden-square&prefill_File=resources%2Fmulti_class_recipe_template.md&prefill_Sentiment=😕) [😐](https://airtable.com/shrUJ3t7KLMqVRFKR?prefill_Repository=makersacademy%2Fgolden-square&prefill_File=resources%2Fmulti_class_recipe_template.md&prefill_Sentiment=😐) [🙂](https://airtable.com/shrUJ3t7KLMqVRFKR?prefill_Repository=makersacademy%2Fgolden-square&prefill_File=resources%2Fmulti_class_recipe_template.md&prefill_Sentiment=🙂) [😀](https://airtable.com/shrUJ3t7KLMqVRFKR?prefill_Repository=makersacademy%2Fgolden-square&prefill_File=resources%2Fmulti_class_recipe_template.md&prefill_Sentiment=😀)  
-Click an emoji to tell us.
-
-<!-- END GENERATED SECTION DO NOT EDIT -->
