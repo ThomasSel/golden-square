@@ -242,7 +242,7 @@ diary = Diary.new
 diary.list_tasks # => []
 
 diary = Diary.new
-diary.readable_entries # => []
+diary.readable_entries(10, 1) # => []
 
 diary = Diary.new
 diary.list_contacts # => []
