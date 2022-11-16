@@ -12,7 +12,8 @@ RSpec.describe TimeError do
 
     # Setup the TimeError class
     time_error = TimeError.new(requester_double)
-    expect(time_error.error).to eq 3723.1
+    time = Time.new(2022, 1, 1, 0, 0, 0)
+    expect(time_error.error(time)).to eq 3723.1
   end
 end
 

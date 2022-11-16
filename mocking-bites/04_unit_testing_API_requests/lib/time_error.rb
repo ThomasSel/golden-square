@@ -8,9 +8,8 @@ class TimeError
     @requester = requester
   end
 
-  def error
-    return get_server_time - Time.new(2022, 1, 1, 0, 0, 0)
-    # return Time.new(2022, 1, 1, 0, 0, 0)
+  def error(current_time)
+    return get_server_time - current_time
   end
 
   private
