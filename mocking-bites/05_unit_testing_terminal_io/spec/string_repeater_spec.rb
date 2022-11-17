@@ -16,6 +16,21 @@ RSpec.describe StringRepeater do
     string_repeater.run
   end
 
+  it "final output is empty is the string given is empty" do
+    io = double("io")
+
+    expect(io).to receive(:puts).with("Hello. I will repeat a string many times.").ordered
+    expect(io).to receive(:puts).with("Please enter a string").ordered
+    expect(io).to receive(:gets).and_return("\n").ordered
+    expect(io).to receive(:puts).with("Please enter a number of repeats").ordered
+    expect(io).to receive(:gets).and_return("10\n").ordered
+    expect(io).to receive(:puts).with("Here is your result:").ordered
+    expect(io).to receive(:puts).with("").ordered
+
+    string_repeater = StringRepeater.new(io)
+    string_repeater.run
+  end
+
   it "Final output is empty if number of repetitions is 0" do
     io = double("io")
 
