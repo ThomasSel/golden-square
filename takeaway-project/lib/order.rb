@@ -1,6 +1,7 @@
 class Order
   def initialize
     @dishes = []
+    @is_submitted = false
   end
 
   def add(dish)
@@ -18,11 +19,12 @@ class Order
   end
 
   def submit!
-    # returns nothing
+    fail "You cannot submit an empty order" if @dishes.empty?
+
+    @is_submitted = true
   end
 
   def submitted?
-    # returns true if the order has been submitted
-    # returns false otherwise
+    return @is_submitted
   end
 end

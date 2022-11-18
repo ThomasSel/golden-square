@@ -274,7 +274,7 @@ order.total_price # => 14.99
 
 # 5 - submit! fails when submitting an empty order
 order = Order.new
-order.submit! # => raises error "You cannot submit an empty order
+order.submit! # => raises error "You cannot submit an empty order"
 
 # 6 - submit! changes the submission status of the order
 order = Order.new
