@@ -1,17 +1,20 @@
 class Order
   def initialize
+    @dishes = []
   end
 
-  def add(dish) # dish is an instance of Dish
-    # returns nothing
+  def add(dish)
+    fail "This dish is unavailable" unless dish.available?
+
+    @dishes << dish
   end
 
   def list
-    # returns a list of all the dishes currently in the order
+    return @dishes
   end
 
   def total_price
-    # returns a float with total price of the order
+    return @dishes.sum(&:price)
   end
 
   def submit!

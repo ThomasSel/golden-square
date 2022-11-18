@@ -156,19 +156,19 @@ order.add(dish_1) # raises error "This dish is unavailable"
 
 # 3 - total_price calculates the total price of the order
 order = Order.new
-dish_list.add(Dish.new("Pizza", 5.0))
-dish_list.add(Dish.new("Pasta", 4.0))
-dish_list.add(Dish.new("Lasagne", 5.99))
-dish_list.total_price # => 14.99
+order.add(Dish.new("Pizza", 5.0))
+order.add(Dish.new("Pasta", 4.0))
+order.add(Dish.new("Lasagne", 5.99))
+order.total_price # => 14.99
 
 # 4 - OrderReceipt returns a formatted string of each dish, their price and the total price
 order = Order.new
-dish_list.add(Dish.new("Pizza", 5.0))
-dish_list.add(Dish.new("Pasta", 4.0))
-dish_list.add(Dish.new("Lasagne", 5.99))
-dish_list.add(Dish.new("Cheese platter", 12.50))
-order_formatter = OrderFormatter.new(order)
-order_formatter.print_receipt # =>
+order.add(Dish.new("Pizza", 5.0))
+order.add(Dish.new("Pasta", 4.0))
+order.add(Dish.new("Lasagne", 5.99))
+order.add(Dish.new("Cheese platter", 12.50))
+order_receipt = OrderReceipt.new(order)
+order_receipt.print_receipt # =>
 # PIZZA                £5.00
 # PASTA                £4.00
 # LASAGNE              £5.99
@@ -178,16 +178,16 @@ order_formatter.print_receipt # =>
 
 # 5 - OrderMessenger sends a text when the order has been submitted
 order = Order.new
-dish_list.add(Dish.new("Pizza", 5.0))
-dish_list.add(Dish.new("Pasta", 4.0))
+order.add(Dish.new("Pizza", 5.0))
+order.add(Dish.new("Pasta", 4.0))
 order.submit!
 order_messenger = OrderMessenger.new(order, "07000000000")
 order_messenger.send_message # => sends message to 07000000000
 
 # 6 - OrderMessenger raises error when trying to send a message for an order that hasn't been submitted yet
 order = Order.new
-dish_list.add(Dish.new("Pizza", 5.0))
-dish_list.add(Dish.new("Pasta", 4.0))
+order.add(Dish.new("Pizza", 5.0))
+order.add(Dish.new("Pasta", 4.0))
 order_messenger = OrderMessenger.new(order, "07000000000")
 order_messenger.send_message # raises error "Cannot send a message for a non submitted order"
 ```
@@ -297,8 +297,8 @@ dish_4 = double(:fake_dish,
                 name: "Cheese platter", price: 12.5)
 order = double(:fake_order, list: [dish_1, dish_2, dish_3, dish_4],
                total_price: 27.49)
-order_formatter = OrderFormatter.new(order)
-order_formatter.print_receipt # =>
+order_receipt = OrderReceipt.new(order)
+order_receipt.print_receipt # =>
 # PIZZA                £5.00
 # PASTA                £4.00
 # LASAGNE              £5.99

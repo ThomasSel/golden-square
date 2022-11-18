@@ -1,9 +1,9 @@
 class OrderMessenger
-  def initialize(order, number) # order is an instance of Order
-                                # number is a string containing the phone number to send the reminder message to
+  def initialize(order, number)
+    @order = order
   end
 
   def send_message
-    # returns nothing
+    fail "Cannot send a message for a non submitted order" unless @order.submitted?
   end
 end
