@@ -213,7 +213,7 @@ dish_list.add(dish_1)
 dish_list.add(dish_1)
 dish_list.add(dish_2)
 dish_list.add(dish_3)
-dish_list.list_availble # => [dish_1, dish_3]
+dish_list.list_available # => [dish_1, dish_3]
 dish_list.all # => [dish_1, dish_2, dish_3]
 
 # ==============================

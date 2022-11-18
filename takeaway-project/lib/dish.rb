@@ -1,21 +1,26 @@
 class Dish
   def initialize(name, price) # name is a string and price is a float
+    fail "Dish must have a name" if name == "" || name.nil?
+    fail "Dish must have a positive price" if price < 0
+    
+    @name = name
+    @price = price.to_f
+    @is_available = true
   end
 
   def name
-    # returns the name of the dish (string)
+    return @name
   end
 
   def price
-    # returns the price of the dish (float)
+    return @price
   end
 
   def available?
-    # returns true if the dish is available, false otherwise
+    return @is_available
   end
 
-  def set_availability!(bool) # bool is a boolean
-    # sets the availability of the dish to whatever value bool is
-    # we set the availability as true when initialising an inst
+  def set_availability!(bool)
+    @is_available = bool
   end
 end

@@ -1,16 +1,17 @@
 class DishList
   def initialize
+    @dishes = []
   end
 
-  def add(dish) # dish is an instance of Dish
-    # returns nothing
+  def add(dish) 
+    @dishes.push(dish).uniq!
   end
 
   def list_available
-    # returns an array of the dishes that are currently available
+    @dishes.select(&:available?)
   end
 
   def all
-    # returns an array of all the dishes, even the ones that aren't currently available
+    @dishes
   end
 end
