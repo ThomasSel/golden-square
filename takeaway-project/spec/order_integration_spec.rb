@@ -2,6 +2,7 @@ require "order"
 require "dish"
 require "order_receipt"
 require "order_messenger"
+require "twilio-ruby"
 
 RSpec.describe "order integrgation" do
   it "check Order adds dishes to its list" do
@@ -44,15 +45,23 @@ RSpec.describe "order integrgation" do
     order.add(Dish.new("Pizza", 5.0))
     order.add(Dish.new("Pasta", 4.0))
     order.submit!
-    order_messenger = OrderMessenger.new(order, "07000000000")
-    #expect(order_messenger.send_message) # => sends message to 07000000000
+    account_sid = ENV["TWILIO_ACCOUNT_SID"]
+    auth_token = ENV["TWILIO_AUTH_TOKEN"]
+    client = Twilio::REST::Client.new(account_sid, auth_token)
+    order_messenger = OrderMessenger.new(order, client,
+                                        ENV["MY_PHONE_NUMBER"])
+    expect(order_messenger.send_message).to eq "Your order has been received! It will be delivered 30 minutes from now"
   end
 
   it "OrderMessenger raises error when trying to send a message for an order that hasn't been submitted yet" do
     order = Order.new
     order.add(Dish.new("Pizza", 5.0))
     order.add(Dish.new("Pasta", 4.0))
-    order_messenger = OrderMessenger.new(order, "07000000000")
+    account_sid = ENV["TWILIO_ACCOUNT_SID"]
+    auth_token = ENV["TWILIO_AUTH_TOKEN"]
+    client = Twilio::REST::Client.new(account_sid, auth_token)
+    order_messenger = OrderMessenger.new(order, client,
+                                        ENV["MY_PHONE_NUMBER"])
     expect { order_messenger.send_message }.to raise_error "Cannot send a message for a non submitted order"
   end
 end

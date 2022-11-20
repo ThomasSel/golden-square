@@ -106,12 +106,17 @@ class OrderReceipt
 end
 
 class OrderMessenger
-  def initialize(order, number) # order is an instance of Order
-                                # number is a string containing the phone number to send the reminder message to
+  def initialize(order, client,
+    recipient_number=ENV["MY_PHONE_NUMBER"],
+    sender_number=ENV["TWILIO_PHONE_NUMBER"])
+    # order is an instance of Order
+    # client is a twilio client with which to send the text_message
+    # sender_number is a string containing the phone number from which to send the text
+    # recipient_number is a string containing the phone number to send the reminder message to
   end
 
   def send_message
-    # returns nothing
+    # returns true if message has been sent, false otherwise
   end
 end
 ```
@@ -181,14 +186,22 @@ order = Order.new
 order.add(Dish.new("Pizza", 5.0))
 order.add(Dish.new("Pasta", 4.0))
 order.submit!
-order_messenger = OrderMessenger.new(order, "07000000000")
-order_messenger.send_message # => sends message to 07000000000
+account_sid = ENV["TWILIO_ACCOUNT_SID"]
+auth_token = ENV["TWILIO_AUTH_TOKEN"]
+client = Twilio::REST::Client.new(account_sid, auth_token)
+order_messenger = OrderMessenger.new(order, client,
+                                     ENV["MY_PHONE_NUMBER"])
+order_messenger.send_message # => sends message to MY_PHONE_NUMBER and returns the message body
 
 # 6 - OrderMessenger raises error when trying to send a message for an order that hasn't been submitted yet
 order = Order.new
 order.add(Dish.new("Pizza", 5.0))
 order.add(Dish.new("Pasta", 4.0))
-order_messenger = OrderMessenger.new(order, "07000000000")
+account_sid = ENV["TWILIO_ACCOUNT_SID"]
+auth_token = ENV["TWILIO_AUTH_TOKEN"]
+client = Twilio::REST::Client.new(account_sid, auth_token)
+order_messenger = OrderMessenger.new(order, client,
+                                     ENV["MY_PHONE_NUMBER"])
 order_messenger.send_message # raises error "Cannot send a message for a non submitted order"
 ```
 
@@ -311,13 +324,53 @@ order_receipt.print_receipt # =>
 # OrderMessenger
 # 1 - OrderMessenger sends a text when the order has been submitted
 order = double(:fake_order, submitted?: true)
-order_messenger = OrderMessenger.new(order, 07000000000)
-order_messenger.send_message # => sends message to number
+message_dbl = double(:fake_twilio_message)
+expect(message_dbl).to receive(:error_code).and_return(nil)
+expect(message_dbl).to receive(:body)
+  .and_return("Your order has been received! It will be delivered 30 minutes from now")
+messages_dbl = double(:fake_twilio_messages)
+expect(messages_dbl).to receive(:create)
+  .with(
+    to: ENV["MY_PHONE_NUMBER"],
+    from: ENV["TWILIO_PHONE_NUMBER"],
+    body: "Your order has been received! It will be delivered 30 minutes from now")
+  .and_return(message_dbl)
+client_dbl = double(:fake_twilio_client)
+expect(client_dbl).to receive(:messages).and_return(messages_dbl)
+order_messenger = OrderMessenger.new(order, client_dbl, ENV["MY_PHONE_NUMBER"])
+order_messenger.send_message # => returns the message body
 
-# 2 - OrderMessenger raises error when trying to send a message for an order that hasn't been submitted yet
+# 2 - OrderMessenger fails if the message raises an error
 order = double(:fake_order, submitted?: true)
-order_messenger = OrderMessenger.new(order, 07000000000)
+message_dbl = double(:fake_twilio_message)
+expect(message_dbl).to receive(:error_code).and_return(404)
+expect(message_dbl).to receive(:error_message).and_return("Failed to send text")
+messages_dbl = double(:fake_twilio_messages)
+expect(messages_dbl).to receive(:create)
+  .with(
+    to: ENV["MY_PHONE_NUMBER"],
+    from: ENV["TWILIO_PHONE_NUMBER"],
+    body: "Your order has been received! It will be delivered 30 minutes from now")
+  .and_return(message_dbl)
+client_dbl = double(:fake_twilio_client)
+expect(client_dbl).to receive(:messages).and_return(messages_dbl)
+order_messenger = OrderMessenger.new(order, client_dbl, ENV["MY_PHONE_NUMBER"])
+order_messenger.send_message # => raises error "Failed to send text"
+
+# 3 - OrderMessenger raises error when trying to send a message for an order that hasn't been submitted yet
+order = double(:fake_order, submitted?: false)
+order_messenger = OrderMessenger.new(order, ENV["MY_PHONE_NUMBER"])
 order_messenger.send_message # raises error "Cannot send a message for a non submitted order"
+
+
+order = Order.new
+order.add(Dish.new("Pizza", 5.0))
+order.add(Dish.new("Pasta", 4.0))
+account_sid = ENV["TWILIO_ACCOUNT_SID"]
+auth_token = ENV["TWILIO_AUTH_TOKEN"]
+client = Twilio::REST::Client.new(account_sid, auth_token)
+order_messenger = OrderMessenger.new(order, client,
+                                     ENV["MY_PHONE_NUMBER"])
 ```
 
 _Encode each example as a test. You can add to the above list as you go._
